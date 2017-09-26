@@ -8,6 +8,7 @@ var Nedb = require('nedb');
 var session = require('express-session');
 var bcrypt = require('bcrypt-nodejs');
 var markdownit = require('markdown-it')({html: true, linkify: true, typographer: true});
+var asciidoctor = require('asciidoctor.js')();
 var moment = require('moment');
 var fs = require('fs');
 var Nedb_store = require('nedb-session-store')(session);
@@ -239,6 +240,7 @@ app.use(app_context + '/bootstrap', express.static(path.join(__dirname, 'node_mo
 app.use(app_context + '/bootstrapTabs', express.static(path.join(__dirname, 'node_modules/bootstrap/js/')));
 app.use(app_context + '/simplemde', express.static(path.join(__dirname, 'node_modules/simplemde/dist/')));
 app.use(app_context + '/markdown-it', express.static(path.join(__dirname, 'node_modules/markdown-it/dist/')));
+app.use(app_context + '/asciidoctor.js', express.static(path.join(__dirname, 'node_modules/asciidoctor.js/dist/')));
 app.use(app_context + '/stylesheets', express.static(path.join(__dirname, 'public/stylesheets')));
 app.use(app_context + '/fonts', express.static(path.join(__dirname, 'public/fonts')));
 app.use(app_context + '/javascripts', express.static(path.join(__dirname, 'public/javascripts')));
@@ -251,6 +253,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Make stuff accessible to our router
 app.use(function (req, res, next){
 	req.markdownit = markdownit;
+    req.asciidoctor = asciidoctor;
 	req.handlebars = handlebars.helpers;
     req.bcrypt = bcrypt;
     req.i18n = i18n;
