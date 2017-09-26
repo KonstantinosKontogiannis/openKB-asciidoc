@@ -169,6 +169,7 @@ router.get('/' + config.settings.route_name + '/:id', common.restrict, function 
     common.config_expose(req.app);
     var classy = require('../public/javascripts/markdown-it-classy');
     var markdownit = req.markdownit;
+    var asciidoctor = req.asciidoctor;
     markdownit.use(classy);
 
     var featuredCount = config.settings.featured_articles_count ? config.settings.featured_articles_count : 4;
@@ -243,7 +244,7 @@ router.get('/' + config.settings.route_name + '/:id', common.restrict, function 
                         title: result.kb_title,
                         result: result,
                         user_page: true,
-                        kb_body: common.sanitizeHTML(markdownit.render(result.kb_body)),
+                        kb_body: common.sanitizeHTML(asciidoctor.convert(result.kb_body)),
                         featured_results: featured_results,
                         config: config,
                         session: req.session,
