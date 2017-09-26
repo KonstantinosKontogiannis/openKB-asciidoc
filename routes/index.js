@@ -244,7 +244,7 @@ router.get('/' + config.settings.route_name + '/:id', common.restrict, function 
                         title: result.kb_title,
                         result: result,
                         user_page: true,
-                        kb_body: common.sanitizeHTML(asciidoctor.convert(result.kb_body)),
+                        kb_body: common.sanitizeHTML(asciidoctor.convert(result.kb_body, {attributes: {showtitle: true}})),
                         featured_results: featured_results,
                         config: config,
                         session: req.session,

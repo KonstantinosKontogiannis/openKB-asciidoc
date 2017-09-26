@@ -245,12 +245,9 @@ $(document).ready(function(){
 
     // convert editor markdown to HTML and display in #preview div
     function convertTextAreaToMarkdown(){
-        var classy = window.markdownItClassy;
         var adocrender = window.Asciidoctor();
 
-        var mark_it_down = window.markdownit({html: true, linkify: true, typographer: true, breaks: true});
-        mark_it_down.use(classy);
-        var html = adocrender.convert(simplemde.value());
+        var html = adocrender.convert(simplemde.value(),{attributes: {showtitle: true}});
 
         // add responsive images and tables
         var fixed_html = html.replace(/<img/g, "<img class='img-responsive' ");
