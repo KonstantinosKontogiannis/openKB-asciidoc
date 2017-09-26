@@ -106,15 +106,47 @@ $(document).ready(function(){
     }
 
     if($('#editor').length){
+
         // setup editors
         var simplemde = new SimpleMDE({
+            blockStyles: {
+                bold: "**",
+                italic: "_"
+            },
             element: $('#editor')[0],
+            insertTexts: {
+                image: ["image:", "[]"],
+                link: ["link:", "[]"]
+            },
             spellChecker: config.enable_spellchecker,
-            toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', '|', 'table', 'horizontal-rule', 'code', 'guide']
+            toolbar:
+            [
+                'bold',
+                'italic',
+                'heading',
+                '|',
+                'unordered-list',
+                'ordered-list',
+                '|',
+                'link',
+                'image',
+                '|',
+                'code',
+                {
+                    name: "Guide",
+                    action: "http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/",
+                    className: "fa fa-question-circle",
+                    title: "Asciidoc Syntax Guide"
+                }
+                ]
         });
 
-        // setup inline attachments
-        inlineAttachment.editors.codemirror4.attach(simplemde.codemirror, {uploadUrl: $('#app_context').val() + '/file/upload_file'});
+        // setup inline attachments for asciidoc syntax
+        inlineAttachment.editors.codemirror4.attach(simplemde.codemirror, {
+            uploadUrl: $('#app_context').val() + '/file/upload_file',
+            progressText: 'image:(Uploading...)[]',
+            urlText: 'image:{filename}[]'
+        });
 
         // do initial convert on load
         convertTextAreaToMarkdown();
@@ -245,12 +277,9 @@ $(document).ready(function(){
 
     // convert editor markdown to HTML and display in #preview div
     function convertTextAreaToMarkdown(){
-        var classy = window.markdownItClassy;
         var adocrender = window.Asciidoctor();
 
-        var mark_it_down = window.markdownit({html: true, linkify: true, typographer: true, breaks: true});
-        mark_it_down.use(classy);
-        var html = adocrender.convert(simplemde.value());
+        var html = adocrender.convert(simplemde.value(),{attributes: {showtitle: true}});
 
         // add responsive images and tables
         var fixed_html = html.replace(/<img/g, "<img class='img-responsive' ");
